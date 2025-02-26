@@ -10,5 +10,6 @@ namespace UAApp.Application.AppUserService
     public interface IApplicationUserService
     {
         Task SaveAppUser(AppUserDto appUserDto);
+        Task<AuthResponseDto> Authenticate(AuthRequestDto authRequest);
     }
 }

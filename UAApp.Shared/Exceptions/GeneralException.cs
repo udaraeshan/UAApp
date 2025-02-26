@@ -1,31 +1,31 @@
 ﻿namespace UAApp.Shared.Exceptions
 {
-    public class CustomException : Exception
+    public class GeneralException : Exception
     {
         public string ErrorMessage { get; }
         public int StatusCode { get; }
-        public CustomException()
+        public GeneralException()
             : base()
         {
             ErrorMessage = string.Empty; ;
         }
-        public CustomException(string message)
+        public GeneralException(string message)
             : base(message)
         {
             ErrorMessage = message;
         }
-        public CustomException(string message, int statusCode)
+        public GeneralException(string message, int statusCode)
            : base(message)
         {
             ErrorMessage = message;
             StatusCode = statusCode;
         }
-        public CustomException(string message, Exception innerException)
+        public GeneralException(string message, Exception innerException)
             : base(message, innerException)
         {
             ErrorMessage = message;
         }
-        public CustomException(string name, object key)
+        public GeneralException(string name, object key)
             : base($"Entity \"{name}\" ({key}) was not found.")
         {
             ErrorMessage = string.Empty; ;

@@ -5,6 +5,8 @@ using UAApp.Application.AppUserService.Dto;
 using UAApp.Application.AppUserService;
 using UAApp.Domain.Common;
 using UAApp.Infrastructure.Data;
+using UAApp.Shared.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UAApp.Server.Controllers
 {
@@ -17,17 +19,16 @@ namespace UAApp.Server.Controllers
         {
             _applicationUserService = applicationUserService;
         }
-
+        [Authorize]
         [HttpPost("save")]
         public async Task<IActionResult> SaveAppUser([FromBody] AppUserDto appUserDto)
         {
             if (appUserDto == null)
             {
-                return BadRequest("Invalid user data.");
+                return BadRequest(ApiStrings.BadRequest);
             }
             await _applicationUserService.SaveAppUser(appUserDto);
-            return Ok("User saved successfully.");
+            return Ok(ApiStrings.SuccessRequest);
         }
     }
-
 }
