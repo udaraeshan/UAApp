@@ -9,6 +9,7 @@ using UAApp.Domain.Entities;
 using UAApp.Infrastructure.Data;
 using UAApp.Persistence.DB;
 using UAApp.Persistence.Repositories;
+using UAApp.Shared.CurrentUser;
 
 
 namespace UAApp.Application.AppUserService

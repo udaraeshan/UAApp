@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UAApp.Domain.Common;
 using UAApp.Domain.Entities;
+using UAApp.Shared.CurrentUser;
 
 namespace UAApp.Persistence.DB
 {

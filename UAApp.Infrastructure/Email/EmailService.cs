@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using UAApp.Domain.Common;
+using UAApp.Shared.CurrentUser;
 using UAApp.Shared.Log;
 
 public class EmailService

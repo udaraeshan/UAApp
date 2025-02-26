@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UAApp.Domain.Common;
 using UAApp.Persistence.DB;
+using UAApp.Shared.AppSettings;
+using UAApp.Shared.CurrentUser;
 
 namespace UAApp.Infrastructure.Data
 {

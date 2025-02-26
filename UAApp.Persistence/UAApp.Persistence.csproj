@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UAApp.Domain\UAApp.Domain.csproj" />
+    <ProjectReference Include="..\UAApp.Shared\UAApp.Shared.csproj" />
   </ItemGroup>
 
 </Project>

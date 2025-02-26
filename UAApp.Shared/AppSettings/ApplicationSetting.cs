@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UAApp.Domain.Common
+namespace UAApp.Shared.AppSettings
 {
     public class ApplicationSetting
     {

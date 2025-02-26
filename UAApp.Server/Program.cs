@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Polly;
+using Serilog;
 using UAApp.Application;
-using UAApp.Domain.Common;
 using UAApp.Infrastructure.Data;
 using UAApp.Persistence.DB;
 using UAApp.Persistence.Seed;
+using UAApp.Server.Middlewares;
+using UAApp.Shared.AppSettings;
+using UAApp.Shared.CurrentUser;
 using UAApp.Shared.Log;
-using UAApp.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 #region Configuration file
@@ -25,7 +27,10 @@ builder.Configuration.AddConfiguration(configuration);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(connectionString));
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IApplicationLogger, ApplicationLogger>();
+builder.Services.AddSingleton<IApplicationLogger, ApplicationLogger>();
+builder.Host.UseSerilog((ctx, lc) => lc
+       .WriteTo.Console()
+       .ReadFrom.Configuration(ctx.Configuration));
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddTransient<EmailService>();
@@ -40,6 +45,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var app = builder.Build();
 var retryPolicy = Policy
     .Handle<Exception>()
@@ -49,6 +55,7 @@ var retryPolicy = Policy
         onRetry: (exception, sleepDuration, retryAttempt, context) =>
         {
         });
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -67,10 +74,14 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        //var logger = services.GetRequiredService<ILogger<Program>>();
-        //logger.LogCritical(LoggingEvents.INIT_DATABASE, ex, LoggingEvents.INIT_DATABASE.Name);
-
-        //throw new Exception(LoggingEvents.INIT_DATABASE.Name, ex);
+        var logger = services.GetRequiredService<IApplicationLogger>();
+        logger.Log(LogLevel.Error, new LogFormat
+        {
+            Message = $"Database Migration failed: {ex.Message}",
+            UserID = string.Empty,
+            Description = ex.InnerException?.Message ?? string.Empty,
+            Method = "Application Init",
+        });
     }
 }
 
@@ -85,7 +96,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

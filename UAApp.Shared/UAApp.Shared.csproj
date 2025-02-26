@@ -15,4 +15,8 @@
     <ProjectReference Include="..\UAApp.Domain\UAApp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
