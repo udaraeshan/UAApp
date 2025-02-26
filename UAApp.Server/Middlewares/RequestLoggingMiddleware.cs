@@ -26,7 +26,28 @@ namespace UAApp.Server.Middlewares
                 Description = $"Query: {context.Request.QueryString}\nBody: {requestBody}",
                 UserID = context.User.Identity?.Name ?? "Anonymous"
             });
+
+            //// Capture the response
+            var originalBodyStream = context.Response.Body;
+            using var responseBodyStream = new MemoryStream();
+            context.Response.Body = responseBodyStream;
+
             await _next(context);
+
+            // Log Response
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
+            string responseBody = await new StreamReader(context.Response.Body).ReadToEndAsync();
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
+
+            _logger.Log(LogLevel.Information, new LogFormat
+            {
+                Message = $"API Response: {context.Request.Method} {context.Request.Path}",
+                Description = $"Status Code: {context.Response.StatusCode}\nBody: {responseBody}",
+                UserID = context.User.Identity?.Name ?? "Anonymous"
+            });
+
+            // Copy the response back to the original stream
+            await responseBodyStream.CopyToAsync(originalBodyStream);
         }
     }
 }
