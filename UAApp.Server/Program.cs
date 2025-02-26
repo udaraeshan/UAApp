@@ -5,6 +5,7 @@ using UAApp.Domain.Common;
 using UAApp.Infrastructure.Data;
 using UAApp.Persistence.DB;
 using UAApp.Persistence.Seed;
+using UAApp.Shared.Log;
 using UAApp.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,8 +25,10 @@ builder.Configuration.AddConfiguration(configuration);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(connectionString));
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IApplicationLogger, ApplicationLogger>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddTransient<EmailService>();
 builder.Services.AddApplicationServices();
 builder.Services.Configure<ApplicationSetting>(configuration);
 #endregion

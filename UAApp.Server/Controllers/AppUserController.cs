@@ -17,6 +17,9 @@ namespace UAApp.Server.Controllers
         {
             _applicationUserService = applicationUserService;
         }
+
+        [ApiVersion("1.0")]
+        [Route("api/v{version:apiVersion}/products")]
         [HttpPost("save")]
         public async Task<IActionResult> SaveAppUser([FromBody] AppUserDto appUserDto)
         {
